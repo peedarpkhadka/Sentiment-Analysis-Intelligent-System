@@ -1,0 +1,24 @@
+START
+
+Load trained sentiment model and tokenizer
+
+Display title "Sentiment AI"
+Displa text input box for user review
+Display "Analyse Sentiment" button
+
+IF button is clicked THEN
+    IF user input is empty THEN
+        Displya warning message
+    ELSE
+        Convert text to numeric sequence using tokenizer
+        Pad sequence to fixed length
+        Predict sentiment using trained model
+        Determine sentimetn label (Positive / Neutral / Negative)
+        Calculate confidence score
+        Display confidence score
+    ENDIF
+ENDIF
+
+Display sidebar information about the model
+
+END
