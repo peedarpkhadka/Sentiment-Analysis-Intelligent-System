@@ -1,0 +1,145 @@
+/// Algorithm 1: Data Preparation and Cleaning ///
+
+START
+
+IMPORT pandas
+
+LOAD dataset from "all_kindle_review.csv" INFO df
+
+DISPLAY dataset information and first rows (for inspection)
+ 
+REMOVE rows with missing values in: rating, reviewText, summary
+
+FILL missing reviewerName with "Unknown"
+
+CONVERT "helpful" column (string) INFO list/tuple form
+EXTRACT helpful_votes = helpful[0]
+EXTRACT total_votes = helpful[1]
+
+COMPUTE helpfulness_ratio = helpful_vote / total_votes
+    IF total_votes == 0 THEN helpfulness_ration = 0
+
+COMPUTE review_length = number of character (or words) in reviewText
+
+REMOVE duplicate reviews using keys: reviewerID, assin, unixReviewTime
+
+SAVE cleaned datased AS "cleaned_kindle_review.csv"
+
+END
+
+
+/// Algorithm 2: Data Splitting ///
+
+START 
+
+LOAD "cleaned_kindle_review.csv" INFO df
+
+DEFINE function map_sentiment()
+    IF rating <= 2 RETURN 0   // Negative
+    ELSE IF rating == 3 RETURN 1  // Neutral
+    ELSE RETURN 2  // Positive
+
+APPLY map_sentiment to df.rating TO create df.sentiment
+
+DISPLAY sentiment class distribuiton
+
+SPLIT df INTO train_df and test_df using stratified split on sentiment
+
+SAVE train_df AS "train.csv"
+SAVE test_df AS "test.csv"
+
+END
+
+
+
+/// Algorithm 3: Tokenization and Padding ///
+
+START
+
+IMPORT Tokenizer and pad_sequences
+
+LOAD "train.csv" and "test.csv"
+
+REPLACE missing reviewText with empty string
+
+SET max_words = 10000
+SET max_len = 150
+
+INITIALISE tokenizer with max_words and OOV token
+
+FIT tokenizer on train.df.reviewText
+
+CONVERT train text to sequences using tokenizer
+CONVERT test text to sequences using tokenizer
+
+PAD train sequences to length max_len
+PAD test sequiences to length max_len
+
+STORE labels:
+    y_train = train_df.sentiment
+    y_test = test_df.sentiment
+
+END
+
+
+
+/// Algorithm 4: Model Traning and Evaluation ///
+
+START
+
+BUILD neural network model:
+    Embedding layer
+    GlobalAveragePooling layer
+    Dense layer
+    Output Dense layer
+
+COMPILE model with:
+    loss = sparse categorical crossentropy
+    optimizer = Adam
+    metrics = accuracy
+
+TRAIN model using X_trian_pad and y_train
+    with validation split
+    for fixed number of epochs
+
+PREDICT sentiment probabilites on X_test_pad
+CONVERT probabilities to class labels using argmax
+
+CALCULATE:
+    accuracy
+    confusion matrix
+    classification report
+
+SAVE confusion matrix ploat as image
+
+END
+
+
+
+
+/// 5: Applicaoin (UI) ///
+
+START
+
+Load trained sentiment model and tokenizer
+
+Display title "Sentiment AI"
+Displa text input box for user review
+Display "Analyse Sentiment" button
+
+IF button is clicked THEN
+    IF user input is empty THEN
+        Displya warning message
+    ELSE
+        Convert text to numeric sequence using tokenizer
+        Pad sequence to fixed length
+        Predict sentiment using trained model
+        Determine sentimetn label (Positive / Neutral / Negative)
+        Calculate confidence score
+        Display confidence score
+    ENDIF
+ENDIF
+
+Display sidebar information about the model
+
+END
