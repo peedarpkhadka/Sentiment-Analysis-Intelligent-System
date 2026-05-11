@@ -10,7 +10,7 @@ st.set_page_config(page_title="Sentiment Analysis Intelligent System", page_icon
 # Load assets (the brain and the translator)
 @st.cache_resource         # This keeps the model in memory so it doesn't reload every time
 def load_model_and_tokenizer():
-    model = tf.keras.models.load_model('sentiment_tf_model.keras')
+    model = tf.keras.models.load_model('sentiment_model.h5')
     tokenizer = joblib.load('tokenizer.pkl')
     return model, tokenizer
 
