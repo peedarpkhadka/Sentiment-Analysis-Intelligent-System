@@ -1,4 +1,4 @@
-tensorflow==2.21
+tensorflow==2.21.0
 streamlit
 joblib
 tensorflow
